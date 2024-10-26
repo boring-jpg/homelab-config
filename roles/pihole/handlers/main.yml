@@ -1,0 +1,5 @@
+- name: restart_docker
+  become: true
+  community.docker.docker_compose_v2:
+    project_src: /home/mitchell/server
+    restarted: true

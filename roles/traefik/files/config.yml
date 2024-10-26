@@ -1,0 +1,112 @@
+http:
+ #region routers 
+  routers:
+  
+    proxmox:
+      entryPoints:
+        - "https"
+      rule: "Host(`proxmox.local.jhomelab.net`)"
+      middlewares:
+        - default-headers
+        - https-redirectscheme
+      tls: {}
+      service: proxmox
+
+    vaultwarden:
+      entryPoints:
+        - "https"
+      rule: "Host(`vw.local.jhomelab.net`)"
+      middlewares:
+        - default-headers
+        - https-redirectscheme
+      tls: {}
+      service: vaultwarden
+
+    wazuh:
+      entryPoints:
+       - "https"
+      rule: "Host(`wazuh.local.jhomelab.net`)"
+      middlewares:
+        - default-headers
+        - https-redirectscheme
+      tls: {}
+      service: wazuh
+
+    pihole:
+      entryPoints:
+        - "https"
+      rule: "Host(`pihole.local.jhomelab.net`)"
+      middlewares:
+        - default-headers
+        - https-redirectscheme
+      tls: {}
+      service: pihole
+
+    jellyfin:
+      entryPoints:
+        - "https"
+      rule: "Host(`jellyfin.local.jhomelab.net`)"
+      middlewares:
+        - default-headers
+        - https-redirectscheme
+      tls: {}
+      service: jellyfin
+  
+#endregion
+#region services
+  services:
+
+    proxmox:
+      loadBalancer:
+        servers:
+          - url: "https://{{ pve1 }}"
+          - url: "https://{{ pve2 }}"
+          - url: "https://{{ pve3 }}"
+        passHostHeader: true
+
+    pihole:
+      loadBalancer:
+        servers:
+          - url: "http://{{ pihole }}"
+        passHostHeader: true
+
+    vaultwarden:
+      loadBalancer:
+        servers:
+          - url: "http://{{ vw }}"
+        passHostHeader: true
+
+    jellyfin:
+      loadBalancer:
+        servers:
+          - url: "http://{{ jellyfin }}"
+        passHostHeader: true
+#endregion
+  middlewares:
+    https-redirectscheme:
+      redirectScheme:
+        scheme: https
+        permanent: true
+    default-headers:
+      headers:
+        frameDeny: true
+        browserXssFilter: true
+        contentTypeNosniff: true
+        forceSTSHeader: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+        stsSeconds: 15552000
+        customFrameOptionsValue: SAMEORIGIN
+        customRequestHeaders:
+          X-Forwarded-Proto: https
+
+    default-whitelist:
+      ipAllowList:
+        sourceRange:
+        - "{{ whitelist }}"
+
+    secured:
+      chain:
+        middlewares:
+        - default-whitelist
+        - default-headers

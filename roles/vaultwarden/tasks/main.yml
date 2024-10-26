@@ -1,0 +1,21 @@
+---
+- name: make vaultwarden directory
+  file:
+    dest: /home/mitchell/server/vaultwarden/
+    state: directory
+    mode: 0600
+    modification_time: preserve
+    access_time: preserve
+
+- name: make data directory
+  file:
+    dest: /home/mitchell/server/vaultwarden/
+    state: directory
+    mode: 0755
+    modification_time: preserve
+    access_time: preserve
+
+- name: place docker-compose file
+  copy:
+    src: docker-compose.yaml
+    dest: /home/mitchell/server/vaultwarden/docker-compose.yaml

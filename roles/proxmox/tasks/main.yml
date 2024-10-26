@@ -1,0 +1,39 @@
+---
+# source: https://pve.proxmox.com/wiki/Package_Repositories#sysadmin_no_subscription_repo
+
+- name: comment out Proxmox VE Enterprise Repository
+  tags: remove_nag
+  copy:
+    src: etc/apt/sources.list.d/pve-enterprise.list
+    dest: /etc/apt/sources.list.d/pve-enterprise.list
+    owner: root
+    group: root
+    mode: 0644
+
+- name: add the non-subscription apt repository
+  tags: remove_nag
+  copy:
+    src: etc/apt/sources.list
+    dest: /etc/apt/sources.list
+    owner: root
+    group: root
+    mode: 0644
+
+- name: change ceph reef repository to non non-subscription
+  tags: remove_nag
+  copy:
+    src: etc/apt/sources.list.d/ceph.list
+    dest: /etc/apt/sources.list.d/ceph.list
+    owner: root
+    group: root
+    mode: 0644
+
+- name: modify javascript to supress nag message
+  tags: remove_nag
+  copy:
+    src: usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
+    dest: /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes

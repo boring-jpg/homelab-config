@@ -1,0 +1,50 @@
+---
+
+- hosts: all
+  name: bring servers up to date.
+  become: true
+  pre_tasks:
+
+  - name: patch servers
+    tags: always
+    apt:
+      update_cache: yes
+      upgrade: dist
+      autoclean: yes
+      autoremove: yes
+    when: ansible_facts['hostname'] != "truenas"
+
+- hosts: proxmox_cluster
+  name: install base packages and secure servers.
+  gather_facts: no
+  become: true
+  roles:
+    - role: proxmox
+    - role: base_linux_server
+
+- hosts: nas
+  gather_facts: no
+  become: true
+  roles:
+    - role: truenas
+
+- hosts: docker_containers
+  gather_facts: no
+  become: true
+  tags: docker
+  roles: 
+    - role: base_linux_server
+    
+- hosts: docker_server01
+  gather_facts: no
+  become: true
+  roles: 
+    - role: pihole
+    - role: vaultwarden
+
+- hosts: docker_server02
+  gather_facts: no
+  become: true
+  roles:
+    - role: wg-easy
+    - role: traefik

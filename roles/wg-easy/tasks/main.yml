@@ -1,0 +1,12 @@
+---
+- name: create server directory
+  become: true
+  file:
+    path: /home/mitchell/server/
+    state: directory
+
+- name: copy docker-compose.yaml
+  become: true
+  copy:
+    src: docker-compose.yaml
+    dest: /home/mitchell/server/docker-compose.yaml

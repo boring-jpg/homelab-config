@@ -1,0 +1,30 @@
+---
+- include_tasks: add_users.yml
+- include_tasks: ssh.yml
+
+- include_tasks: docker_engine.yml
+  when: ansible_facts['distribution'] != "Debian"
+
+- include_tasks: ufw.yml
+  when: ansible_facts['distribution'] not in ["RedHat", "Debian"]
+  
+
+- name: Add remote banner
+  tags: security
+  copy:
+    dest: /etc/issue.net
+    src: issue
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+
+- name: Add local banner
+  tags: security
+  copy:
+    dest: /etc/issue
+    src: issue
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes

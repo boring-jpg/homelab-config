@@ -1,0 +1,54 @@
+--- 
+
+- name: create traefik and data directories
+  file:
+    dest: /home/mitchell/server/traefik/data/
+    state: directory
+    mode: 0600
+    modification_time: preserve
+    access_time: preserve
+
+
+- name: create acme.json file
+  file:
+    dest: /home/mitchell/server/traefik/data/acme.json
+    state: touch
+    mode: 0600
+    modification_time: preserve
+    access_time: preserve
+
+- name: place traefik config file
+  tags: configs
+  template:
+    src: traefik.yml.j2
+    dest: /home/mitchell/server/traefik/data/traefik.yml
+
+- name: place file with cloudflare api token
+  tags: configs
+  template:
+    src: cf_api_token.txt.j2
+    dest: /home/mitchell/server/traefik/cloudflare_api_token.txt
+
+- name: create proxy network in docker
+  community.docker.docker_network:
+    name: proxy
+
+- name: place Traefik Dashboard Password & .env
+  tags: configs
+  template:
+    src: env.j2
+    dest: /home/mitchell/server/traefik/.env
+
+- name: create config.yml
+  tags: configs
+  copy:
+    src: ./files/config.yml
+    dest: /home/mitchell/server/traefik/data/config.yml
+    mode: 0600
+
+
+- name: copy docker-compose.yaml
+  become: true
+  template:
+    src: docker-compose.yaml.j2
+    dest: /home/mitchell/server/traefik/docker-compose.yml

@@ -1,0 +1,18 @@
+---
+
+- hosts: docker_server02
+  gather_facts: no
+  become: true
+  roles:
+    - role: traefik
+  
+  tasks:
+  - name: restart traefik container
+    become: true
+    community.docker.docker_compose_v2:
+      project_src: /home/mitchell/server/traefik
+      state: restarted
+        
+    
+
+

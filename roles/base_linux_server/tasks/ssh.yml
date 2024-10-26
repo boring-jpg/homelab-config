@@ -1,0 +1,22 @@
+- name: add hardened SSH config (non-proxmox hosts)
+  tags: security
+  template:
+    dest: /etc/ssh/sshd_config
+    src: sshd_config.j2
+    owner: root
+    group: root
+    mode: 0600
+    backup: yes
+  when: "'pve' not in ansible_facts['hostname']"
+
+- name: restart SSH
+  service:
+    name: ssh
+    state: restarted
+  when: ansible_facts['distribution'] != "RedHat"
+
+- name: restart SSH
+  service:
+    name: sshd
+    state: restarted
+  when: ansible_facts['distribution'] == "RedHat"

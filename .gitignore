@@ -1,0 +1,4 @@
+/venv
+.vscode
+.vault_password
+hosts.ini

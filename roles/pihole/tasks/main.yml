@@ -1,0 +1,5 @@
+- name: copy docker-compose.yaml
+  become: true
+  copy:
+    src: docker-compose.yaml
+    dest: /home/mitchell/server/docker-compose.yml
