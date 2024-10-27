@@ -22,16 +22,6 @@ http:
       tls: {}
       service: vaultwarden
 
-    wazuh:
-      entryPoints:
-       - "https"
-      rule: "Host(`wazuh.local.jhomelab.net`)"
-      middlewares:
-        - default-headers
-        - https-redirectscheme
-      tls: {}
-      service: wazuh
-
     pihole:
       entryPoints:
         - "https"
@@ -51,6 +41,16 @@ http:
         - https-redirectscheme
       tls: {}
       service: jellyfin
+
+    nas:
+      entryPoints:
+        - "https"
+      rule: "Host(`nas.local.jhomelab.net`)"
+      middlewares:
+        - default-headers
+        - https-redirectscheme
+      tls: {}
+      service: nas
   
 #endregion
 #region services
@@ -74,6 +74,12 @@ http:
       loadBalancer:
         servers:
           - url: "http://{{ vw }}"
+        passHostHeader: true
+
+    nas:
+      loadBalancer:
+        servers:
+          - url: "https://{{ nas }}"
         passHostHeader: true
 
     jellyfin:

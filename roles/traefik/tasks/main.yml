@@ -41,11 +41,10 @@
 
 - name: create config.yml
   tags: configs
-  copy:
-    src: ./files/config.yml
+  template:
+    src: config.yml.j2
     dest: /home/mitchell/server/traefik/data/config.yml
     mode: 0600
-
 
 - name: copy docker-compose.yaml
   become: true
