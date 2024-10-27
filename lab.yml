@@ -22,12 +22,6 @@
     - role: proxmox
     - role: base_linux_server
 
-- hosts: nas
-  gather_facts: no
-  become: true
-  roles:
-    - role: truenas
-
 - hosts: docker_containers
   gather_facts: no
   become: true

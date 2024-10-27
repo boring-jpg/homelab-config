@@ -5,8 +5,8 @@
 - include_tasks: docker_engine.yml
   when: ansible_facts['distribution'] != "Debian"
 
-- include_tasks: ufw.yml
-  when: ansible_facts['distribution'] not in ["RedHat", "Debian"]
+# - include_tasks: ufw.yml
+#   when: ansible_facts['distribution'] not in ["RedHat", "Debian"]
   
 
 - name: Add remote banner
