@@ -1,44 +1,74 @@
 ---
 
-- hosts: all
-  name: bring servers up to date.
+- name: Bring servers up to date.
+  hosts: All
   become: true
   pre_tasks:
 
-  - name: patch servers
-    tags: always
-    apt:
-      update_cache: yes
-      upgrade: dist
-      autoclean: yes
-      autoremove: yes
-    when: ansible_facts['hostname'] != "truenas"
+    - name: Patch servers
+      tags: always
+      ansible.builtin.apt:
+        update_cache: true
+        upgrade: dist
+        autoclean: true
+        autoremove: true
+      # when: ansible_facts['hostname'] != "truenas"
 
-- hosts: proxmox_cluster
-  name: install base packages and secure servers.
-  gather_facts: no
+- name: Install base packages and secure proxmox cluster.
+  hosts: proxmox_cluster
+  gather_facts: true
   become: true
   roles:
-    - role: proxmox
     - role: base_linux_server
 
-- hosts: docker_containers
-  gather_facts: no
+- name: Secure and install docker engine on docker servers.
+  hosts: Docker_containers
+  gather_facts: true
   become: true
   tags: docker
-  roles: 
+  roles:
     - role: base_linux_server
-    
-- hosts: docker_server01
-  gather_facts: no
+
+- name: Deploy containers
+  hosts: docker_server01
+  gather_facts: false
   become: true
-  roles: 
+  roles:
     - role: pihole
     - role: vaultwarden
 
-- hosts: docker_server02
-  gather_facts: no
+  tasks:
+    - name: Add Compose files to .env
+      ansible.builtin.script:
+        cmd: scripts/compose.sh
+        chdir: /home/mitchell/server
+
+    - name: Start containers
+      community.docker.docker_compose_v2:
+        project_src: /home/mitchell/server
+        check_files_existing: false
+        pull: always
+        build: always
+        state: present
+
+- name: Deploy conatiners
+  hosts: docker_server02
+  gather_facts: false
   become: true
   roles:
     - role: wg-easy
     - role: traefik
+
+  tasks:
+    - name: Add Compose files to .env
+      ansible.builtin.script:
+        cmd: scripts/compose.sh
+        chdir: /home/mitchell/server
+
+    - name: Start containers
+      community.docker.docker_compose_v2:
+        project_src: /home/mitchell/server
+        check_files_existing: false
+        pull: always
+        build: always
+        state: present

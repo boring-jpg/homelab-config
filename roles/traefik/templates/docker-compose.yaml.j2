@@ -17,13 +17,13 @@ services:
       TRAEFIK_DASHBOARD_CREDENTIALS: ${TRAEFIK_DASHBOARD_CREDENTIALS}
     secrets:
       - cf_api_token
-    env_file: .env # use .env
+    env_file: /home/mitchell/server/traefik/.env # use .env
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./data/traefik.yml:/traefik.yml:ro
-      - ./data/acme.json:/acme.json
-      - ./data/config.yml:/config.yml:ro
+      - /home/mitchell/server/traefik/data/traefik.yml:/traefik.yml:ro
+      - /home/mitchell/server/traefik/data/acme.json:/acme.json
+      - /home/mitchell/server/traefik/data/config.yml:/config.yml:ro
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.entrypoints=http"
@@ -43,7 +43,7 @@ services:
   
 secrets:
   cf_api_token:
-    file: ./cloudflare_api_token.txt
+    file: /home/mitchell/server/traefik/cloudflare_api_token.txt
 
 networks:
   proxy:
