@@ -1,53 +1,57 @@
---- 
+---
 
-- name: create traefik and data directories
-  file:
+- name: Create traefik and data directories
+  ansible.builtin.file:
     dest: /home/mitchell/server/traefik/data/
     state: directory
-    mode: 0600
+    mode: "0600"
     modification_time: preserve
     access_time: preserve
 
 
-- name: create acme.json file
-  file:
+- name: Create acme.json file
+  ansible.builtin.file:
     dest: /home/mitchell/server/traefik/data/acme.json
     state: touch
-    mode: 0600
+    mode: "0600"
     modification_time: preserve
     access_time: preserve
 
-- name: place traefik config file
+- name: Place traefik config file
   tags: configs
-  template:
+  ansible.builtin.template:
     src: traefik.yml.j2
     dest: /home/mitchell/server/traefik/data/traefik.yml
+    mode: "0600"
 
-- name: place file with cloudflare api token
+- name: Place file with cloudflare api token
   tags: configs
-  template:
+  ansible.builtin.template:
     src: cf_api_token.txt.j2
     dest: /home/mitchell/server/traefik/cloudflare_api_token.txt
+    mode: "0600"
 
-- name: create proxy network in docker
+- name: Create proxy network in docker
   community.docker.docker_network:
     name: proxy
 
-- name: place Traefik Dashboard Password & .env
+- name: Place Traefik Dashboard Password & .env
   tags: configs
-  template:
+  ansible.builtin.template:
     src: env.j2
     dest: /home/mitchell/server/traefik/.env
+    mode: "0600"
 
-- name: create config.yml
+- name: Create config.yml
   tags: configs
-  template:
+  ansible.builtin.template:
     src: config.yml.j2
     dest: /home/mitchell/server/traefik/data/config.yml
-    mode: 0600
+    mode: "0600"
 
-- name: copy docker-compose.yaml
+- name: Copy docker-compose.yaml
   become: true
-  template:
+  ansible.builtin.template:
     src: docker-compose.yaml.j2
-    dest: /home/mitchell/server/traefik/docker-compose.yml
+    dest: /home/mitchell/server/docker-compose-traefik.yaml
+    mode: "0600"

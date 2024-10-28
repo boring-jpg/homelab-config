@@ -1,15 +1,12 @@
-
 # Ansible service account name
-ansible_username: robot_overlord
-ssh_users: "robot_overlord mitchell"
+base_linux_server_ansible_username: robot_overlord
+base_linux_server_ssh_users: "robot_overlord mitchell"
 
 # Admin Username
-username: mitchell
+base_linux_server_username: mitchell
 
 # packages to Install
-packages:
+base_linux_server_packages:
   - sudo
   - neofetch
   - tree
-
-  

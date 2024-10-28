@@ -1,49 +1,49 @@
-- name: create groups group
-  group:
+- name: Create groups group
+  ansible.builtin.group:
     name: admin
     state: present
 
-- name: add local non-root user
-  user: 
-    name: "{{ username }}"
-    groups: 
+- name: Add local non-root user
+  ansible.builtin.user:
+    name: "{{ base_linux_server_username }}"
+    groups:
       - admin
       - users
     shell: /bin/bash
-    home: /home/{{ username }}
-    create_home: yes
+    home: /home/{{ base_linux_server_username }}
+    create_home: true
     state: present
 
-- name: add ansible user
-  user:
-    name: "{{ ansible_username }}"
+- name: Add ansible user
+  ansible.builtin.user:
+    name: "{{ base_linux_server_ansible_username }}"
 
-- name: add SSH key for user
-  authorized_key:
-    user: "{{ username }}"
+- name: Add SSH key for user
+  ansible.posix.authorized_key:
+    user: "{{ base_linux_server_username }}"
     key: "{{ lookup('file', '~/.ssh/id_ed25519.pub') }}"
     state: present
 
-- name: ensure sudo is installed
-  package:
+- name: Ensure sudo is installed
+  ansible.builtin.package:
     name: sudo
     state: present
-  when: ansible_facts['hostname'] != "truenas"
+  # when: ansible_facts['hostname'] != "truenas"
 
 - name: Add local user to sudoers
-  template:
-    dest: /etc/sudoers.d/{{ username }}
+  ansible.builtin.template:
+    dest: /etc/sudoers.d/{{ base_linux_server_username }}
     src: admin_sudo.j2
     owner: root
     group: root
-    mode: 0440
+    mode: "0440"
     validate: /usr/sbin/visudo -csf %s
 
-- name: add ansible user to sudoers
-  template:
+- name: Add ansible user to sudoers
+  ansible.builtin.template:
     src: ansible_sudo.j2
-    dest: /etc/sudoers.d/{{ ansible_username }}
+    dest: /etc/sudoers.d/{{ base_linux_server_ansible_username }}
     owner: root
     group: root
-    mode: 0440
+    mode: "0440"
     validate: /usr/sbin/visudo -csf %s

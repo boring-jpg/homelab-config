@@ -1,12 +1,14 @@
 ---
-- name: create server directory
+- name: Create server directory
   become: true
-  file:
+  ansible.builtin.file:
     path: /home/mitchell/server/
     state: directory
+    mode: "0600"
 
-- name: copy docker-compose.yaml
+- name: Copy docker-compose.yaml
   become: true
-  copy:
-    src: docker-compose.yaml
-    dest: /home/mitchell/server/docker-compose.yaml
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: /home/mitchell/server/docker-compose-wg-easy.yaml
+    mode: "0600"
