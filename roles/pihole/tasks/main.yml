@@ -1,5 +1,6 @@
-- name: copy docker-compose.yaml
+- name: Copy docker-compose.yaml
   become: true
-  copy:
-    src: docker-compose.yaml
-    dest: /home/mitchell/server/docker-compose.yml
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: /home/mitchell/server/docker-compose-pihole.yaml
+    mode: "0755"
