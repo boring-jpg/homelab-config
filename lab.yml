@@ -12,7 +12,6 @@
         upgrade: dist
         autoclean: true
         autoremove: true
-      # when: ansible_facts['hostname'] != "truenas"
 
 - name: Install base packages and secure proxmox cluster.
   hosts: proxmox_cluster
@@ -36,6 +35,8 @@
   roles:
     - role: pihole
     - role: vaultwarden
+    - role: wg-easy
+    - role: traefik
 
   tasks:
     - name: Add Compose files to .env
@@ -52,12 +53,12 @@
         state: present
 
 - name: Deploy conatiners
-  hosts: docker_server02
+  hosts: docker_server01
   gather_facts: false
   become: true
   roles:
-    - role: wg-easy
-    - role: traefik
+    
+    
 
   tasks:
     - name: Add Compose files to .env
