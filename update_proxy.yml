@@ -10,6 +10,6 @@
     - name: Restart traefik container
       become: true
       community.docker.docker_compose_v2:
-        project_src: /home/mitchell/server
+        project_src: /srv/
         files: docker-compose-traefik.yaml
         state: restarted

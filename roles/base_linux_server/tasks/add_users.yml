@@ -28,7 +28,7 @@
   ansible.builtin.package:
     name: sudo
     state: present
-    
+
 - name: Add local user to sudoers
   ansible.builtin.template:
     dest: /etc/sudoers.d/{{ base_linux_server_username }}

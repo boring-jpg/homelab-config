@@ -21,7 +21,7 @@
     - role: base_linux_server
 
 - name: Secure and install docker engine on docker servers.
-  hosts: Docker_containers
+  hosts: docker_containers
   gather_facts: true
   become: true
   tags: docker
@@ -32,44 +32,30 @@
   hosts: docker_server01
   gather_facts: false
   become: true
+  pre_tasks:
+    - name: Kill and remove previous containers
+      community.docker.docker_compose_v2:
+        project_src: /srv/
+        check_files_existing: false
+        state: absent
+        remove_images: all
+        remove_orphans: true
+
   roles:
     - role: pihole
     - role: vaultwarden
     - role: wg-easy
-    - role: traefik
+    - role: home_assistant
 
   tasks:
     - name: Add Compose files to .env
       ansible.builtin.script:
         cmd: scripts/compose.sh
-        chdir: /home/mitchell/server
+        chdir: /srv/
 
     - name: Start containers
       community.docker.docker_compose_v2:
-        project_src: /home/mitchell/server
+        project_src: /srv/
         check_files_existing: false
         pull: always
-        build: always
-        state: present
-
-- name: Deploy conatiners
-  hosts: docker_server01
-  gather_facts: false
-  become: true
-  roles:
-    
-    
-
-  tasks:
-    - name: Add Compose files to .env
-      ansible.builtin.script:
-        cmd: scripts/compose.sh
-        chdir: /home/mitchell/server
-
-    - name: Start containers
-      community.docker.docker_compose_v2:
-        project_src: /home/mitchell/server
-        check_files_existing: false
-        pull: always
-        build: always
         state: present

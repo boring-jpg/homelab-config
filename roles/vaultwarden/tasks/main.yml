@@ -1,7 +1,7 @@
 ---
 - name: Make vaultwarden directory
   ansible.builtin.file:
-    dest: /home/mitchell/server/vaultwarden/
+    dest: /srv/vaultwarden/
     state: directory
     mode: "0600"
     modification_time: preserve
@@ -9,7 +9,7 @@
 
 - name: Make data directory
   ansible.builtin.file:
-    dest: /home/mitchell/server/vaultwarden/
+    dest: /srv/vaultwarden/
     state: directory
     mode: "0755"
     modification_time: preserve
@@ -18,5 +18,5 @@
 - name: Place docker-compose file
   ansible.builtin.template:
     src: docker-compose.yaml.j2
-    dest: /home/mitchell/server/docker-compose-vaultwarden.yaml
+    dest: /srv/docker-compose-vaultwarden.yaml
     mode: "0600"

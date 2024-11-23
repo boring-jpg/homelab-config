@@ -7,7 +7,7 @@
   pre_tasks:
     - name: Kill and remove previous containers
       community.docker.docker_compose_v2:
-        project_src: /home/mitchell/server
+        project_src: /srv/
         check_files_existing: false
         state: absent
         remove_images: all
@@ -16,7 +16,7 @@
   tasks:
     - name: Pull images and re-create containers
       community.docker.docker_compose_v2:
-        project_src: /home/mitchell/server
+        project_src: /srv/
         check_files_existing: false
         pull: always
         state: present

@@ -12,5 +12,5 @@ services:
       TZ: 'America/Chicago'
       WEBPASSWORD: "{{ pihole_password }}"
     volumes:
-      - './pihole/etc-pihole:/etc/pihole'
-      - './pihole/etc-dnsmasq.d:/etc/dnsmasq.d'
+      - '/srv/pihole/etc-pihole:/etc/pihole'
+      - '/srv/pihole/etc-dnsmasq.d:/etc/dnsmasq.d'

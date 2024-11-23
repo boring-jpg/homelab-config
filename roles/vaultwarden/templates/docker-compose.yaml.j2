@@ -4,6 +4,6 @@ services:
     container_name: vaultwarden
     image: vaultwarden/server:latest
     volumes:
-      - '/home/mitchell/server/vaultwarden/data/:/data/'
+      - '/srv/vaultwarden/data/:/data/'
     ports:
       - "{{ web_port }}"
