@@ -1,0 +1,15 @@
+---
+- name: Update Traefik
+  hosts: docker_server02
+  gather_facts: false
+  become: true
+  roles:
+    - role: traefik
+
+  tasks:
+    - name: Restart traefik container
+      become: true
+      community.docker.docker_compose_v2:
+        project_src: /srv/
+        files: docker-compose-traefik.yaml
+        state: restarted

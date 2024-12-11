@@ -1,0 +1,22 @@
+---
+- name: Update all containers
+  hosts: docker_containers
+  gather_facts: false
+  serial: 1
+  become: true
+  pre_tasks:
+    - name: Kill and remove previous containers
+      community.docker.docker_compose_v2:
+        project_src: /srv/
+        check_files_existing: false
+        state: absent
+        remove_images: all
+        remove_orphans: true
+
+  tasks:
+    - name: Pull images and re-create containers
+      community.docker.docker_compose_v2:
+        project_src: /srv/
+        check_files_existing: false
+        pull: always
+        state: present

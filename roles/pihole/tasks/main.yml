@@ -2,5 +2,5 @@
   become: true
   ansible.builtin.template:
     src: docker-compose.yaml.j2
-    dest: /home/mitchell/server/docker-compose-pihole.yaml
+    dest: /srv/docker-compose-pihole.yaml
     mode: "0755"

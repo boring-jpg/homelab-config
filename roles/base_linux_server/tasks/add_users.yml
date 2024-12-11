@@ -28,7 +28,6 @@
   ansible.builtin.package:
     name: sudo
     state: present
-  # when: ansible_facts['hostname'] != "truenas"
 
 - name: Add local user to sudoers
   ansible.builtin.template:
